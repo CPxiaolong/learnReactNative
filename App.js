@@ -9,13 +9,13 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import HomeScreen from "./app/pages/Home";
+import IndexScreen from "./app/pages/index";
 import DetailsScreen from "./app/pages/Details";
 
 
 const AppNavigator = createStackNavigator({
-    Home: {
-        screen: HomeScreen,
+    IndexScreen: {
+        screen: IndexScreen,
         navigationOptions: ({ navigation }) => {
             return {
                 header : null,
@@ -25,7 +25,7 @@ const AppNavigator = createStackNavigator({
     Details: DetailsScreen
 },
 {
-    initialRouteName: "Home",
+    initialRouteName: "IndexScreen",
     defaultNavigationOptions: {
         headerStyle: {
             backgroundColor: '#f4511e',
