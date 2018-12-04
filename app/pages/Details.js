@@ -6,6 +6,7 @@
 
 import React, {Component}from "react";
 import { View, Text, Button } from "react-native";
+import {SafeAreaView} from "react-navigation";
 export default class Details extends Component {
     static navigationOptions = {
         title: '详情',
@@ -15,11 +16,13 @@ export default class Details extends Component {
         const itemId = navigation.getParam('itemId', 'NO-ID')
         const otherParam = navigation.getParam('otherParam', 'noOtherParam')
         return (
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <Text>Details Screen</Text>
-                <Text>{itemId}</Text>
-                <Text>{otherParam}</Text>
-            </View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    <Text>Details Screen</Text>
+                    <Text>{itemId}</Text>
+                    <Text>{otherParam}</Text>
+                </View>
+            </SafeAreaView>
         );
     }
 }

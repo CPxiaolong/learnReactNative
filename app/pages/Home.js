@@ -8,17 +8,19 @@ import React, { Component } from "react";
 import { View, Text, Button } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { createBottomTabNavigator, createAppContainer } from "react-navigation";
+import { createBottomTabNavigator, createAppContainer, SafeAreaView} from "react-navigation";
 class HomeScreen extends React.Component {
     render() {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Home lala!</Text>
-                <Button title='详情' onPress={() => this.props.navigation.navigate('Details', {
-                    itemId: 86,
-                    otherParam: 'anything you want here',
-                })} />
-            </View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text>Home lala!</Text>
+                    <Button title='详情' onPress={() => this.props.navigation.navigate('Details', {
+                        itemId: 86,
+                        otherParam: 'anything you want here',
+                    })} />
+                </View>
+            </SafeAreaView>
         );
     }
 }
@@ -69,19 +71,3 @@ const TabNavigatorContainer = createAppContainer(TabNavigator);
 
 
 export default TabNavigator;
-// export default class Home extends Component {
-//     static navigationOptions = ({ navigation }) => ({
-//         header: null,
-//     });
-//     render() {
-//         return (
-//             <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-//                 <Text>这是 MODE首页</Text>
-//                 <Button title='详情' onPress={() => this.props.navigation.navigate('Details', {
-//                     itemId: 86,
-//                     otherParam: 'anything you want here',
-//                 })} />
-//             </View>
-//         );
-//     }
-// }
