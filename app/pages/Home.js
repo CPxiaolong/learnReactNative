@@ -5,42 +5,30 @@
  */
 
 import React, { Component } from "react";
-import { Image, StyleSheet, View, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-navigation";
+import { View, Text, Button, Image, StyleSheet, FlatList} from "react-native";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { createBottomTabNavigator, createAppContainer, SafeAreaView } from "react-navigation";
+import ScrollableTabView, {DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import axios from "axios";
-let MOCKED_MOVIES_DATA = [
-    {
-        title: "标题",
-        year: "2015",
-        posters: { thumbnail: "http://i.imgur.com/UePbdph.jpg" }
-    }
-];
-export default class HomeScreen extends Component {
+
+export default class SettingsScreen extends React.Component {
+    static navigationOptions = ({ navigation }) => ({
+        header: null,
+    });
 
     constructor(props) {
-        super(props);
-        this.state = { 
+        super(props)
+        this.state = {
             movieList: [],
-            movieTitleList: [
-                {key:'喜剧', title: '喜剧'},
-                {key:'动作', title: '动作'},
-                {key:'惊悚', title: '惊悚'},
-                {key:'青春', title: '青春'},
-                {key:'综艺', title: '综艺'},
-                {key:'纪录片', title: '纪录片'},
-                {key:'科幻', title: '科幻'},
-                {key:'音乐', title: '音乐'},
-                {key:'奇幻', title: '奇幻'},
-                {key:'武侠', title: '武侠'},
-                {key:'家庭', title: '家庭'}
-            ],
             refreshing: false
-        };
+        }
+
         this._onRefresh = this._onRefresh.bind(this)
     }
 
     componentDidMount() {
-        this.getData()   
+        this.getData()
     }
 
     getData() {
@@ -50,24 +38,6 @@ export default class HomeScreen extends Component {
         })
     }
 
-    renderListHeader = () => {
-        let movieTitleList = this.state.movieTitleList
-        return (
-            <View style = {styles.movieTitleListContainer} >
-                <FlatList 
-                    horizontal={true}
-                    data = {movieTitleList}
-                    renderItem = {({item}) => {
-                        return (
-                            <View key={item.key} style={styles.movieTitleListTitle}>
-                                <Text style={styles.movieTitleListTitle}>{item.title}</Text>
-                            </View>
-                        )
-                    }}
-                /> 
-            </View>
-        )
-    }
     _onRefresh() {
         this.setState({ refreshing: true});
         setTimeout(() => {
@@ -80,10 +50,14 @@ export default class HomeScreen extends Component {
             movies.key = movies.id
             return movies
         })
-        return (
-            // onPress={() => this.props.navigation.navigate('Details')}
-            <SafeAreaView style={{ flex: 1 }}>
-                {this.renderListHeader()}
+        return <ScrollableTabView
+            style={{marginTop: 20, }}
+            initialPage={1}
+            renderTabBar={() => <DefaultTabBar />}
+        >
+            <Text tabLabel='Tab #1'>My</Text>
+            <Text tabLabel='Tab #2'>favorite</Text>
+            <View tabLabel='Tab #3'>
                 <FlatList
                     data = {moviesHadKey}
                     refreshing={this.state.refreshing}
@@ -97,11 +71,12 @@ export default class HomeScreen extends Component {
                             </View>
                         </View>)
                     }}
-                />     
-            </SafeAreaView>
-        );
+                />    
+            </View>
+        </ScrollableTabView>;
     }
 }
+
 
 const styles = StyleSheet.create({
     movieTitleListContainer: {
