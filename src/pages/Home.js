@@ -10,6 +10,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator, createAppContainer, SafeAreaView } from "react-navigation";
 import ScrollableTabView, {DefaultTabBar, ScrollableTabBar} from 'react-native-scrollable-tab-view';
+import InfoFlatList from '../component/InfoFlatList/index'
 import axios from "axios";
 
 export default class SettingsScreen extends React.Component {
@@ -21,10 +22,12 @@ export default class SettingsScreen extends React.Component {
         super(props)
         this.state = {
             movieList: [],
-            refreshing: false
+            refreshing: false,
+            titleList: ['动作', '喜剧', '古装', '剧情', '纪录片']
         }
 
-        this._onRefresh = this._onRefresh.bind(this)
+        this._onRefresh = this._onRefresh.bind(this);
+        this.renderNewsPages = this.renderNewsPages.bind(this);
     }
 
     componentDidMount() {
@@ -45,6 +48,23 @@ export default class SettingsScreen extends React.Component {
         }, 1000);
     }
 
+    renderNewsPages(title, data, refreshing, onRefresh) {
+        return (
+            <View
+                key = {title} 
+                tabLabel = {title} 
+                style = {styles.FlatContainer}
+            >
+                <InfoFlatList
+                    InfoList = {data}
+                    refreshing = {refreshing}
+                    onRefresh = {onRefresh}
+                    onPress = {() => this.props.navigation.navigate('Details')}
+                />
+            </View>
+        )
+    }
+
     render() {
         let moviesHadKey = this.state.movieList.map(movies => {
             movies.key = movies.id
@@ -53,90 +73,17 @@ export default class SettingsScreen extends React.Component {
         return(
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollableTabView
-                style={{marginTop: 20, }}
-                initialPage={0}
-                renderTabBar={() => <ScrollableTabBar />}
+                style = {{}}
+                tabBarUnderlineStyle = '#67afdb'
+                tabBarActiveTextColor = '#2d2d2d'
+                tabBarInactiveTextColor = '#999999'
+                initialPage = {0}
+                renderTabBar = {() => <ScrollableTabBar />}
             >
-                <View tabLabel='动作' style = {styles.FlatContainer}>
-                    <FlatList
-                        data = {moviesHadKey}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                        renderItem = {({item}, index) => {
-                            return (<View key={index} style={styles.container}>
-                                <Image source={{ uri: item.posters.thumbnail }}  style={styles.thumbnail} onPress={() => this.props.navigation.navigate('Details')} />
-                                <View style={styles.rightContainer}>
-                                    <Text style = {styles.title} onPress={() => this.props.navigation.navigate('Details')}>{item.title}</Text>
-                                    <Text style = {styles.year}>{item.year}{index}</Text>
-                                </View>
-                            </View>)
-                        }}
-                    />    
-                </View>
-                <View tabLabel='喜剧' style = {styles.FlatContainer}>
-                    <FlatList
-                        data = {moviesHadKey}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                        renderItem = {({item}, index) => {
-                            return (<View key={index} style={styles.container}>
-                                <Image source={{ uri: item.posters.thumbnail }}  style={styles.thumbnail} onPress={() => this.props.navigation.navigate('Details')} />
-                                <View style={styles.rightContainer}>
-                                    <Text style = {styles.title} onPress={() => this.props.navigation.navigate('Details')}>{item.title}</Text>
-                                    <Text style = {styles.year}>{item.year}{index}</Text>
-                                </View>
-                            </View>)
-                        }}
-                    />    
-                </View>
-                <View tabLabel='剧情' style = {styles.FlatContainer}>
-                    <FlatList
-                        data = {moviesHadKey}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                        renderItem = {({item}, index) => {
-                            return (<View key={index} style={styles.container}>
-                                <Image source={{ uri: item.posters.thumbnail }}  style={styles.thumbnail} onPress={() => this.props.navigation.navigate('Details')} />
-                                <View style={styles.rightContainer}>
-                                    <Text style = {styles.title} onPress={() => this.props.navigation.navigate('Details')}>{item.title}</Text>
-                                    <Text style = {styles.year}>{item.year}{index}</Text>
-                                </View>
-                            </View>)
-                        }}
-                    />    
-                </View>
-                <View tabLabel='剧情' style = {styles.FlatContainer}>
-                    <FlatList
-                        data = {moviesHadKey}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                        renderItem = {({item}, index) => {
-                            return (<View key={index} style={styles.container}>
-                                <Image source={{ uri: item.posters.thumbnail }}  style={styles.thumbnail} onPress={() => this.props.navigation.navigate('Details')} />
-                                <View style={styles.rightContainer}>
-                                    <Text style = {styles.title} onPress={() => this.props.navigation.navigate('Details')}>{item.title}</Text>
-                                    <Text style = {styles.year}>{item.year}{index}</Text>
-                                </View>
-                            </View>)
-                        }}
-                    />    
-                </View>
-                <View tabLabel='剧情' style = {styles.FlatContainer}>
-                    <FlatList
-                        data = {moviesHadKey}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                        renderItem = {({item}, index) => {
-                            return (<View key={index} style={styles.container}>
-                                <Image source={{ uri: item.posters.thumbnail }}  style={styles.thumbnail} onPress={() => this.props.navigation.navigate('Details')} />
-                                <View style={styles.rightContainer}>
-                                    <Text style = {styles.title} onPress={() => this.props.navigation.navigate('Details')}>{item.title}</Text>
-                                    <Text style = {styles.year}>{item.year}{index}</Text>
-                                </View>
-                            </View>)
-                        }}
-                    />    
-                </View>
+                {this.state.titleList.map( title => {
+                        return this.renderNewsPages(title, moviesHadKey, this.state.refreshing, this._onRefresh, )
+                    }
+                )}
             </ScrollableTabView>
         </SafeAreaView>)
     }
@@ -162,24 +109,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F5FCFF",
+        backgroundColor: "#ffffff",
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 10
     },
     rightContainer: {
         flex: 1,
-    },
-    title: {
-        fontSize: 16,
-        marginBottom: 8,
-        textAlign: 'center',
-    },
-    year: {
-        textAlign: 'center',
-    },
-    thumbnail: {
-        width: 53,
-        height: 81
     }
 });

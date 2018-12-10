@@ -28,7 +28,7 @@ const AppNavigator = createStackNavigator({
     initialRouteName: "IndexScreen",
     defaultNavigationOptions: {
         headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: '#55ade9',
         },
         headerTintColor: '#fff',
         headerRight: <View />,
