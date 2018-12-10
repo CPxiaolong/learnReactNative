@@ -9,8 +9,8 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import IndexScreen from "./app/pages/index";
-import DetailsScreen from "./app/pages/Details";
+import IndexScreen from "./src/pages/index";
+import DetailsScreen from "./src/pages/Details";
 
 
 const AppNavigator = createStackNavigator({
