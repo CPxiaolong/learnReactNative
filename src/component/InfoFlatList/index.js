@@ -21,12 +21,12 @@ export default class InfoFlatList extends Component {
             onRefresh={onRefresh}
             renderItem = {({item}, index) => {
                 return (
-                <TouchableHighlight onPress = {() => {onPress()}}>
+                <TouchableHighlight onPress = {() => {onPress(item.url)}}>
                     <View key={index} style = {styles.container}>
-                        <Image source = {{ uri: item.posters.thumbnail }}  style = {styles.thumbnail} />
+                        <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.thumbnail} />
                         <View style = {styles.rightContainer}>
                             <Text style = {styles.title}>{item.title}</Text>
-                            <Text style = {styles.year}>{item.year}{index}</Text>
+                            <Text style = {styles.year}>{item.date}{index}</Text>
                         </View>
                     </View>
                 </TouchableHighlight>

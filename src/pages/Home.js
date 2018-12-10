@@ -35,9 +35,14 @@ export default class SettingsScreen extends React.Component {
     }
 
     getData() {
-        const REQUEST_URL = 'https://raw.githubusercontent.com/facebook/react-native/0.51-stable/docs/MoviesExample.json';
-        axios.get(REQUEST_URL).then(resp => {
-            this.setState({ movieList: resp.data.movies});
+        const REQUEST_URL = 'http://v.juhe.cn/toutiao/index';
+        axios.get(REQUEST_URL, {  //params参数必写 , 如果没有参数传{}也可以
+            params: {  
+                type: 'top',
+                key: '2bbea444e5b1244e712a754182d85629'
+            }
+        }).then(resp => {
+            this.setState({ movieList: resp.data.result.data});
         })
     }
 
@@ -59,7 +64,11 @@ export default class SettingsScreen extends React.Component {
                     InfoList = {data}
                     refreshing = {refreshing}
                     onRefresh = {onRefresh}
-                    onPress = {() => this.props.navigation.navigate('Details')}
+                    onPress = {(url) => 
+                        this.props.navigation.navigate('Details', {
+                            url
+                        })
+                    }
                 />
             </View>
         )
@@ -67,7 +76,7 @@ export default class SettingsScreen extends React.Component {
 
     render() {
         let moviesHadKey = this.state.movieList.map(movies => {
-            movies.key = movies.id
+            movies.key = movies.uniquekey
             return movies
         })
         return(

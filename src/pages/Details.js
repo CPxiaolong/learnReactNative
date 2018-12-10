@@ -5,7 +5,7 @@
  */
 
 import React, {Component}from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, WebView} from "react-native";
 import {SafeAreaView} from "react-navigation";
 export default class Details extends Component {
     static navigationOptions = {
@@ -13,15 +13,13 @@ export default class Details extends Component {
     };
     render() {
         const navigation = this.props.navigation;
-        const itemId = navigation.getParam('itemId', 'NO-ID')
-        const otherParam = navigation.getParam('otherParam', 'noOtherParam')
+        const newsUrl = navigation.getParam('url', 'noUrl')
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <Text>Details Screen</Text>
-                    <Text>{itemId}</Text>
-                    <Text>{otherParam}</Text>
-                </View>
+                <WebView
+                    style={{ flex: 1 }}
+                    source={{uri: newsUrl}}
+                 />
             </SafeAreaView>
         );
     }
