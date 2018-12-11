@@ -20,7 +20,8 @@ export default class InfoFlatList extends Component {
         this.state = {
             refreshing: false,
             newsList: [],
-            FooterMessage:'加载中...'
+            FooterMessage:'加载中...',
+            isLoading: false, // 避免上拉的时候多次触发刷新方法
         }
         this.handlerRefresh = this.handlerRefresh.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
@@ -66,30 +67,33 @@ export default class InfoFlatList extends Component {
      * @description 上拉刷新
      */
     handlerEndReached() {
-        
-        setTimeout(() => {
-            let data = this.setKey(newsDataList2.result.data)
-            if (data.length === 0 && this.state.FooterMessage !== '暂无更多数据') {
+        if (!this.state.isLoading) {
+            this.setState({
+                isLoading: true
+            })
+            let timer = setTimeout(() => {
+                clearTimeout(timer)
+                let data = this.setKey(newsDataList2.result.data)
+                if (data.length === 0 && this.state.FooterMessage !== '暂无更多数据') {
+                    this.setState({
+                        FooterMessage: '暂无更多数据'
+                    })
+                } else if (data.length !== 0 && this.state.FooterMessage === '暂无更多数据') {
+                    this.setState({
+                        FooterMessage: '加载中...'
+                    })
+                } else {
+                    this.setState( (preState, props) => {
+                        return {
+                            newsList: [...preState.newsList, ...data]
+                        }
+                    })
+                }
                 this.setState({
-                    FooterMessage: '暂无更多数据'
+                    isLoading: false
                 })
-            } else if (data.length !== 0 && this.state.FooterMessage === '暂无更多数据') {
-                this.setState({
-                    FooterMessage: '加载中...'
-                })
-            } else {
-                this.setState( (preState, props) => {
-                    return {
-                        newsList: [...preState.newsList, ...data]
-                    }
-                })
-            }
-            // this.setState( (preState, props) => {
-            //     return {
-            //         newsList: [...preState.newsList, ...data]
-            //     }
-            // })
-        }, 1000);
+            }, 1000);
+        }
     }
 
     renderListFooterComponent() {
@@ -103,22 +107,22 @@ export default class InfoFlatList extends Component {
     }
 
     render() {
-        // let newsHadKey = this.state.newsList.map(news => {
-        //     news.key = news.uniquekey
-        //     return news
-        // })
+        let newsHadKey = this.state.newsList.map((news, index) => {
+            news.key = news.uniquekey + index
+            return news
+        })
         let dataList = this.state.newsList
         let {onPress, newsKey} = this.props;
         const ITEM_HEIGHT = 100;
         return <FlatList
-            data = {dataList}
+            data = {newsHadKey}
             refreshing = {this.state.refreshing}
             ListFooterComponent = {this.renderListFooterComponent}
             onRefresh = {newsKey => this.handlerRefresh(newsKey)}
             initialNumToRender = {6} // 指定一开始渲染的元素数量, 最好刚刚够填满一个屏幕
-            keyExtractor = {item => item.uniquekey}  // 给数组明确key键
+            // keyExtractor = {item => item.uniquekey}  // 给数组明确key键
             onEndReached = {() => this.handlerEndReached()} // 上拉刷新
-            // onEndReachedThreshold = {0.2} // 决定当距离内容最底部还有多远时触发onEndReached, 比如，0.5表示距离内容最底部的距离为当前列表可见长度的一半时触发。
+            onEndReachedThreshold = {0.01} // 决定当距离内容最底部还有多远时触发onEndReached, 比如，0.5表示距离内容最底部的距离为当前列表可见长度的一半时触发。
             getItemLayout = {(data, index) => (  // 减少额外开销 需要提前知道内容高度
                 {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
             )}
