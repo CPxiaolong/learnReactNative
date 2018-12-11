@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from "react";
-import { View, Text, Button, Image, StyleSheet, FlatList, TouchableHighlight, alert} from "react-native";
+import { View, Text, Button, Image, StyleSheet, FlatList, TouchableHighlight, Dimensions} from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator, createAppContainer, SafeAreaView } from "react-navigation";
@@ -113,7 +113,7 @@ export default class InfoFlatList extends Component {
         })
         let dataList = this.state.newsList
         let {onPress, newsKey} = this.props;
-        const ITEM_HEIGHT = 100;
+        // const ITEM_HEIGHT = 100;
         return <FlatList
             data = {newsHadKey}
             refreshing = {this.state.refreshing}
@@ -123,26 +123,49 @@ export default class InfoFlatList extends Component {
             // keyExtractor = {item => item.uniquekey}  // 给数组明确key键
             onEndReached = {() => this.handlerEndReached()} // 上拉刷新
             onEndReachedThreshold = {0.01} // 决定当距离内容最底部还有多远时触发onEndReached, 比如，0.5表示距离内容最底部的距离为当前列表可见长度的一半时触发。
-            getItemLayout = {(data, index) => (  // 减少额外开销 需要提前知道内容高度
-                {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
-            )}
+            // getItemLayout = {(data, index) => (  // 减少额外开销 需要提前知道内容高度
+            //     {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
+            // )}
             renderItem = {({item}, index) => {
-                return (
-                <TouchableHighlight onPress = {() => {onPress(item.url)}}>
-                    <View key={index} style = {styles.container}>
-                        <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.thumbnail} />
-                        <View style = {styles.rightContainer}>
-                            <Text style = {styles.title}>{item.title}</Text>
-                            <Text style = {styles.year}>{item.date}</Text>
+                let newView;
+                if (item.thumbnail_pic_s && item.thumbnail_pic_s02 && item.thumbnail_pic_s03) {
+                    newView = <View key={index} style = {styles.moreImageContainer}>
+                        <View style = {styles.TitleContainer}>
+                            <Text style = {styles.moreImagetitle}>{item.title}</Text>
+                        </View>
+                        <View style = {styles.ImageContainer}>
+                            <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.moreImage} />
+                            <Image source = {{ uri: item.thumbnail_pic_s02 }}  style = {styles.moreImage} />
+                            <Image source = {{ uri: item.thumbnail_pic_s03 }}  style = {styles.moreImage} />
+                        </View>
+                        <View style = {styles.InforContainer}>
+                            <Text style = {styles.authorName}>{item.author_name}</Text>
+                            <Text style = {styles.moreImageTime}>{item.date}</Text>
                         </View>
                     </View>
+                } else {
+                    newView = <View key={index} style = {styles.container}>
+                        <View style = {styles.rightContainer}>
+                            <Text style = {styles.title}>{item.title}</Text>
+                            <View style = {styles.InforContainer}>
+                                <Text style = {styles.authorName}>{item.author_name}</Text>
+                                <Text style = {styles.moreImageTime}>{item.date}</Text>
+                            </View>
+                        </View>
+                        <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.thumbnail} />
+                    </View>
+                }
+                
+                return (
+                <TouchableHighlight onPress = {() => {onPress(item.url)}}>
+                   {newView}
                 </TouchableHighlight>
                 )
             }}
         />
     }
 }
-       
+const {height,width} =  Dimensions.get('window');
 const styles = StyleSheet.create({
     FlatContainer: {
         
@@ -163,11 +186,21 @@ const styles = StyleSheet.create({
         // justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#ffffff",
+        paddingLeft: 5,
+        paddingRight: 5,
+        borderBottomColor:'#f2f2f2',
+        borderBottomWidth: 1,
+        marginBottom: 12,
+        // height: 100,
+    },
+    moreImageContainer: {
+        alignItems: "center",
+        backgroundColor: "#ffffff",
         paddingLeft: 10,
         paddingRight: 10,
         borderBottomColor:'#f2f2f2',
         borderBottomWidth: 1,
-        height: 100,
+        marginBottom: 12,
     },
     rightContainer: {
         flex: 1,
@@ -175,11 +208,33 @@ const styles = StyleSheet.create({
         paddingRight: 6,
         alignContent: 'space-between',
     },
+    oreImagetitle: {
+        textAlign: 'left',
+    },
     title: {
+        flex: 1,
+        flexDirection: 'row',
         fontSize: 16,
         marginBottom: 8,
         textAlign: 'left',
         color: '#333333'
+    },
+    moreImagetitle: {
+        flex: 1,
+        fontSize: 16,
+        marginBottom: 8,
+        textAlign: 'left',
+        color: '#333333'
+    },
+    authorName: {
+        flex:1,
+        textAlign: 'left',
+    },
+    moreImageTime: {
+        flex:1,
+        fontSize: 12,
+        textAlign: 'right',
+        color: '#888888'
     },
     year: {
         fontSize: 12,
@@ -191,6 +246,14 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 3,
     },
+    moreImage: {
+        width: width/3 - 10,
+        //flex: 1,
+        marginLeft: 3,
+        marginRight: 3,
+        height: 80,
+        borderRadius: 3,
+    },
     faltListfooter: {
         paddingTop: 10,
         paddingBottom: 10,
@@ -199,5 +262,19 @@ const styles = StyleSheet.create({
     },
     faltListfooterMessage: {
         fontSize: 14
+    },
+    TitleContainer: {
+        flexDirection: 'row',
+        marginBottom: 4,
+    },
+    ImageContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    InforContainer: {
+        flexDirection: 'row',
+        paddingBottom: 3,
+        marginTop: 4,
     }
 });
