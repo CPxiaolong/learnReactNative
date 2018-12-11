@@ -10,6 +10,7 @@ import {SafeAreaView} from "react-navigation";
 export default class Details extends Component {
     static navigationOptions = {
         title: '详情',
+        header: null
     };
     render() {
         const navigation = this.props.navigation;
