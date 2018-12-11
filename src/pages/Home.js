@@ -10,7 +10,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator, createAppContainer, SafeAreaView } from "react-navigation";
 import ScrollableTabView, {DefaultTabBar, ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import InfoFlatList from '../component/InfoFlatList/index'
+import InfoFlatList from '../component/InfoFlatList/index';
+import newsDataList from '../assets/newsData';
 import axios from "axios";
 
 export default class SettingsScreen extends React.Component {
@@ -23,10 +24,50 @@ export default class SettingsScreen extends React.Component {
         this.state = {
             movieList: [],
             refreshing: false,
-            titleList: ['动作', '喜剧', '古装', '剧情', '纪录片']
+            // titleList: ['动作', '喜剧', '古装', '剧情', '纪录片'],
+            newsData: [
+                {
+                    key: 'top',
+                    title: '头条',
+                },
+                {
+                    key: 'shehui',
+                    title: '社会',
+                },
+                {
+                    key: 'guonei',
+                    title: '国内',
+                },
+                {
+                    key: 'guoji',
+                    title: '国际',
+                },
+                {
+                    key: 'yule',
+                    title: '娱乐',
+                },
+                {
+                    key: 'tiyu',
+                    title: '体育',
+                },
+                {
+                    key: 'junshi',
+                    title: '军事',
+                },
+                {
+                    key: 'keji',
+                    title: '科技',
+                },
+                {
+                    key: 'caijing',
+                    title: '财经',
+                },
+                {
+                    key: 'shishang',
+                    title: '时尚',
+                }
+            ]
         }
-
-        this._onRefresh = this._onRefresh.bind(this);
         this.renderNewsPages = this.renderNewsPages.bind(this);
     }
 
@@ -35,35 +76,28 @@ export default class SettingsScreen extends React.Component {
     }
 
     getData() {
-        const REQUEST_URL = 'http://v.juhe.cn/toutiao/index';
-        axios.get(REQUEST_URL, {  //params参数必写 , 如果没有参数传{}也可以
-            params: {  
-                type: 'top',
-                key: '2bbea444e5b1244e712a754182d85629'
-            }
-        }).then(resp => {
-            this.setState({ movieList: resp.data.result.data});
-        })
+        this.setState({movieList: newsDataList.result.data})
+        // const REQUEST_URL = 'http://v.juhe.cn/toutiao/index';
+        // axios.get(REQUEST_URL, {  //params参数必写 , 如果没有参数传{}也可以
+        //     params: {  
+        //         type: 'top',
+        //         key: '2bbea444e5b1244e712a754182d85629'
+        //     }
+        // }).then(resp => {
+        //     this.setState({ movieList: resp.data.result.data});
+        // })
     }
 
-    _onRefresh() {
-        this.setState({ refreshing: true});
-        setTimeout(() => {
-            this.setState({ refreshing: false});
-        }, 1000);
-    }
 
-    renderNewsPages(title, data, refreshing, onRefresh) {
+    renderNewsPages(news) {
         return (
             <View
-                key = {title} 
-                tabLabel = {title} 
+                key = {news.key} 
+                tabLabel = {news.title} 
                 style = {styles.FlatContainer}
             >
                 <InfoFlatList
-                    InfoList = {data}
-                    refreshing = {refreshing}
-                    onRefresh = {onRefresh}
+                    newsKey = {news.key}
                     onPress = {(url) => 
                         this.props.navigation.navigate('Details', {
                             url
@@ -75,10 +109,10 @@ export default class SettingsScreen extends React.Component {
     }
 
     render() {
-        let moviesHadKey = this.state.movieList.map(movies => {
-            movies.key = movies.uniquekey
-            return movies
+        let titleList = this.state.newsData.map(item => {
+            return item.title
         })
+
         return(
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollableTabView
@@ -89,8 +123,8 @@ export default class SettingsScreen extends React.Component {
                 initialPage = {0}
                 renderTabBar = {() => <ScrollableTabBar />}
             >
-                {this.state.titleList.map( title => {
-                        return this.renderNewsPages(title, moviesHadKey, this.state.refreshing, this._onRefresh, )
+                {titleList.map( (title, index) => {
+                        return this.renderNewsPages(this.state.newsData[index])
                     }
                 )}
             </ScrollableTabView>
