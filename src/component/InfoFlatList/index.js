@@ -25,25 +25,22 @@ export default class InfoFlatList extends Component {
         }
         this.handlerRefresh = this.handlerRefresh.bind(this);
         this.renderListFooterComponent = this.renderListFooterComponent.bind(this);
-        // this.setKey = this.setKey(this)
+
     }
     componentWillMount() {
-        this.setState({newsList: newsDataList.result.data})
+        
     }
     componentWillUnmount() {
       
     }
 
-    shouldComponentUpdate(nextProps,nextState) {
-        return this.state.newsList.length !== nextState.newsList.length;
+    componentDidMount() {
+        this.setState({newsList: newsDataList.result.data})
     }
 
-    setKey(data) {
-        let newsHadKey = data.map(news => {
-            news.key = news.uniquekey
-            return news
-        })
-        return newsHadKey
+    shouldComponentUpdate(nextProps,nextState) {
+        return true
+        // return this.state.newsList.length !== nextState.newsList.length;
     }
 
     handlerRefresh(newsKey) {
@@ -56,12 +53,17 @@ export default class InfoFlatList extends Component {
         // }).then(resp => {
         //     this.setState({ newsList: resp.data.result.data});
         // })
-        this.setState({ refreshing: true});
-        let data = this.setKey(newsDataList2.result.data)
+        this.setState( (preState, props) => {
+            return {
+                refreshing: true,
+            }
+        })
+
+        let data = newsDataList2.result.data
         setTimeout(() => {
             this.setState( (preState, props) => {
                 return {
-                    refreshing: !preState.refreshing,
+                    refreshing: false,
                     newsList: [...data,...preState.newsList]
                 }
             })
@@ -78,7 +80,7 @@ export default class InfoFlatList extends Component {
          
             let timer = setTimeout(() => {
                 clearTimeout(timer)
-                let data = this.setKey(newsDataList2.result.data)
+                let data = newsDataList2.result.data
                 if (data.length === 0 && this.state.FooterMessage !== '暂无更多数据') {
                     this.setState({
                         FooterMessage: '暂无更多数据'
@@ -118,7 +120,6 @@ export default class InfoFlatList extends Component {
             nowNews.key = index + 'aaa'
             return nowNews
         })
-        console.log(newsHadKey,'data')
         let dataList = this.state.newsList
         let {onPress, newsKey} = this.props;
         // const ITEM_HEIGHT = 100;
