@@ -111,17 +111,6 @@ export default {
 				"thumbnail_pic_s":"http:\/\/00imgmini.eastday.com\/mobile\/20181211\/20181211160736_d14cd775b9357e694499693cbef36896_4_mwpm_03200403.jpg",
 				"thumbnail_pic_s02":"http:\/\/00imgmini.eastday.com\/mobile\/20181211\/20181211160736_d14cd775b9357e694499693cbef36896_1_mwpm_03200403.jpg",
 				"thumbnail_pic_s03":"http:\/\/00imgmini.eastday.com\/mobile\/20181211\/20181211160736_d14cd775b9357e694499693cbef36896_2_mwpm_03200403.jpg"
-			},
-			{
-				"uniquekey":"d6a231029aabab5987538362d9afd464",
-				"title":"王者荣耀:11日更新，10位英雄遭调整，王昭君被削弱！",
-				"date":"2018-12-11 16:06",
-				"category":"头条",
-				"author_name":"峡谷骑士团",
-				"url":"http:\/\/mini.eastday.com\/mobile\/181211160609941.html",
-				"thumbnail_pic_s":"http:\/\/09imgmini.eastday.com\/mobile\/20181211\/20181211160609_d41d8cd98f00b204e9800998ecf8427e_1_mwpm_03200403.jpg",
-				"thumbnail_pic_s02":"http:\/\/09imgmini.eastday.com\/mobile\/20181211\/20181211160609_d41d8cd98f00b204e9800998ecf8427e_6_mwpm_03200403.jpg",
-				"thumbnail_pic_s03":"http:\/\/09imgmini.eastday.com\/mobile\/20181211\/20181211160609_d41d8cd98f00b204e9800998ecf8427e_4_mwpm_03200403.jpg"
 			}
 		]
 	},

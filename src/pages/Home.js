@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from "react";
-import { View, Text, Button, Image, StyleSheet, FlatList} from "react-native";
+import { View, Text, StyleSheet, Dimensions} from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { createBottomTabNavigator, createAppContainer, SafeAreaView } from "react-navigation";
@@ -14,7 +14,7 @@ import InfoFlatList from '../component/InfoFlatList/index';
 import newsDataList from '../assets/newsData';
 import axios from "axios";
 
-export default class SettingsScreen extends React.Component {
+export default class SettingsScreen extends Component {
     static navigationOptions = ({ navigation }) => ({
         header: null,
     });
@@ -132,10 +132,10 @@ export default class SettingsScreen extends React.Component {
     }
 }
 
-
+const {height,width} =  Dimensions.get('window');
 const styles = StyleSheet.create({
     FlatContainer: {
-        
+        // height: height - 124
     },
     movieTitleListContainer: {
         fontSize: 20,

@@ -34,6 +34,10 @@ export default class InfoFlatList extends Component {
       
     }
 
+    shouldComponentUpdate(nextProps,nextState) {
+        return this.state.newsList.length !== nextState.newsList.length;
+    }
+
     setKey(data) {
         let newsHadKey = data.map(news => {
             news.key = news.uniquekey
@@ -71,6 +75,7 @@ export default class InfoFlatList extends Component {
             this.setState({
                 isLoading: true
             })
+         
             let timer = setTimeout(() => {
                 clearTimeout(timer)
                 let data = this.setKey(newsDataList2.result.data)
@@ -83,9 +88,10 @@ export default class InfoFlatList extends Component {
                         FooterMessage: '加载中...'
                     })
                 } else {
+                    let testdata = this.state.newsList.concat(data)
                     this.setState( (preState, props) => {
                         return {
-                            newsList: [...preState.newsList, ...data]
+                            newsList: [...testdata]
                         }
                     })
                 }
@@ -108,67 +114,71 @@ export default class InfoFlatList extends Component {
 
     render() {
         let newsHadKey = this.state.newsList.map((news, index) => {
-            news.key = news.uniquekey + index
-            return news
+            let nowNews = JSON.parse(JSON.stringify(news))
+            nowNews.key = index + 'aaa'
+            return nowNews
         })
+        console.log(newsHadKey,'data')
         let dataList = this.state.newsList
         let {onPress, newsKey} = this.props;
         // const ITEM_HEIGHT = 100;
-        return <FlatList
-            data = {newsHadKey}
-            refreshing = {this.state.refreshing}
-            ListFooterComponent = {this.renderListFooterComponent}
-            onRefresh = {newsKey => this.handlerRefresh(newsKey)}
-            initialNumToRender = {6} // 指定一开始渲染的元素数量, 最好刚刚够填满一个屏幕
-            // keyExtractor = {item => item.uniquekey}  // 给数组明确key键
-            onEndReached = {() => this.handlerEndReached()} // 上拉刷新
-            onEndReachedThreshold = {0.01} // 决定当距离内容最底部还有多远时触发onEndReached, 比如，0.5表示距离内容最底部的距离为当前列表可见长度的一半时触发。
-            // getItemLayout = {(data, index) => (  // 减少额外开销 需要提前知道内容高度
-            //     {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
-            // )}
-            renderItem = {({item}, index) => {
-                let newView;
-                if (item.thumbnail_pic_s && item.thumbnail_pic_s02 && item.thumbnail_pic_s03) {
-                    newView = <View key={index} style = {styles.moreImageContainer}>
-                        <View style = {styles.TitleContainer}>
-                            <Text style = {styles.moreImagetitle}>{item.title}</Text>
-                        </View>
-                        <View style = {styles.ImageContainer}>
-                            <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.moreImage} />
-                            <Image source = {{ uri: item.thumbnail_pic_s02 }}  style = {styles.moreImage} />
-                            <Image source = {{ uri: item.thumbnail_pic_s03 }}  style = {styles.moreImage} />
-                        </View>
-                        <View style = {styles.InforContainer}>
-                            <Text style = {styles.authorName}>{item.author_name}</Text>
-                            <Text style = {styles.moreImageTime}>{item.date}</Text>
-                        </View>
-                    </View>
-                } else {
-                    newView = <View key={index} style = {styles.container}>
-                        <View style = {styles.rightContainer}>
-                            <Text style = {styles.title}>{item.title}</Text>
+        return <View style = {styles.FlatContainer}>
+                <FlatList
+                data = {newsHadKey}
+                refreshing = {this.state.refreshing}
+                ListFooterComponent = {this.renderListFooterComponent}
+                onRefresh = {newsKey => this.handlerRefresh(newsKey)}
+                initialNumToRender = {6} // 指定一开始渲染的元素数量, 最好刚刚够填满一个屏幕
+                // keyExtractor = {item => item.uniquekey}  // 给数组明确key键
+                onEndReached = {() => this.handlerEndReached()} // 上拉刷新
+                onEndReachedThreshold = {1} // 决定当距离内容最底部还有多远时触发onEndReached, 比如，0.5表示距离内容最底部的距离为当前列表可见长度的一半时触发。
+                // getItemLayout = {(data, index) => (  // 减少额外开销 需要提前知道内容高度
+                //     {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
+                // )}
+                renderItem = {({item}, index) => {
+                    let newView;
+                    if (item.thumbnail_pic_s && item.thumbnail_pic_s02 && item.thumbnail_pic_s03) {
+                        newView = <View key={index} style = {styles.moreImageContainer}>
+                            <View style = {styles.TitleContainer}>
+                                <Text style = {styles.moreImagetitle}>{item.title}</Text>
+                            </View>
+                            <View style = {styles.ImageContainer}>
+                                <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.moreImage} />
+                                <Image source = {{ uri: item.thumbnail_pic_s02 }}  style = {styles.moreImage} />
+                                <Image source = {{ uri: item.thumbnail_pic_s03 }}  style = {styles.moreImage} />
+                            </View>
                             <View style = {styles.InforContainer}>
                                 <Text style = {styles.authorName}>{item.author_name}</Text>
                                 <Text style = {styles.moreImageTime}>{item.date}</Text>
                             </View>
                         </View>
-                        <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.thumbnail} />
-                    </View>
-                }
-                
-                return (
-                <TouchableHighlight onPress = {() => {onPress(item.url)}}>
-                   {newView}
-                </TouchableHighlight>
-                )
-            }}
-        />
+                    } else {
+                        newView = <View key={index} style = {styles.container}>
+                            <View style = {styles.rightContainer}>
+                                <Text style = {styles.title}>{item.title}</Text>
+                                <View style = {styles.InforContainer}>
+                                    <Text style = {styles.authorName}>{item.author_name}</Text>
+                                    <Text style = {styles.moreImageTime}>{item.date}</Text>
+                                </View>
+                            </View>
+                            <Image source = {{ uri: item.thumbnail_pic_s }}  style = {styles.thumbnail} />
+                        </View>
+                    }
+                    
+                    return (
+                    <TouchableHighlight onPress = {() => {onPress(item.url)}}>
+                    {newView}
+                    </TouchableHighlight>
+                    )
+                }}
+            />
+        </View>
     }
 }
 const {height,width} =  Dimensions.get('window');
 const styles = StyleSheet.create({
     FlatContainer: {
-        
+        height: height - 124
     },
     movieTitleListContainer: {
         fontSize: 20,
@@ -188,19 +198,23 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff",
         paddingLeft: 5,
         paddingRight: 5,
+        paddingTop: 6,
+        paddingBottom:6,
         borderBottomColor:'#f2f2f2',
         borderBottomWidth: 1,
-        marginBottom: 12,
+        // marginBottom: 12,
         // height: 100,
     },
     moreImageContainer: {
         alignItems: "center",
         backgroundColor: "#ffffff",
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 6,
+        paddingRight: 6,
+        paddingTop: 12,
+        paddingBottom: 12,
         borderBottomColor:'#f2f2f2',
         borderBottomWidth: 1,
-        marginBottom: 12,
+        // marginBottom: 12,
     },
     rightContainer: {
         flex: 1,
