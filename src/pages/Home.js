@@ -14,7 +14,7 @@ import InfoFlatList from '../component/InfoFlatList/index';
 import newsDataList from '../assets/newsData';
 import axios from "axios";
 
-export default class SettingsScreen extends Component {
+export default class  HomeScreen  extends Component {
     static navigationOptions = ({ navigation }) => ({
         header: null,
     });

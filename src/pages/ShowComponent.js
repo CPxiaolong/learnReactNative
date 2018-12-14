@@ -1,7 +1,7 @@
 /**
  * @description 首页
  * @author 王小龙
- * @date 2018-12-03
+ * @date 2018-12-14
  */
 
 import React, { Component } from "react";
@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-navigation";
 import InfoFlatList from '../component/InfoFlatList/index';
 import axios from "axios";
 import Video from 'react-native-video';
-export default class SettingsScreen extends Component {
+export default class ShowComponentScreen extends Component {
 
     constructor(props) {
         super(props);
